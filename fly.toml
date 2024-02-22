@@ -1,0 +1,63 @@
+app = 'your-app-name'
+primary_region = 'iad'
+
+[build]
+image = "gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.9-alpine"
+
+[deploy]
+strategy = "bluegreen"
+
+[[vm]]
+size = 'shared-cpu-1x'
+memory = "256mb"
+cpus = 1
+
+[env]
+# instances
+CSQL_PROXY_INSTANCE_CONNECTION_NAME_0 = "project:region:instance?port=5432"
+# proxy
+CSQL_PROXY_ADDRESS = "::"
+CSQL_PROXY_PORT = "5432"
+CSQL_PROXY_MAX_CONNECTIONS = "80"
+# health check
+CSQL_PROXY_HEALTH_CHECK = "true"
+CSQL_PROXY_HTTP_PORT = "9801"
+CSQL_PROXY_HTTP_ADDRESS = "::"
+# auth
+CSQL_PROXY_CREDENTIALS_FILE = "/run/secrets/google_application_credentials.json"
+# CSQL_PROXY_PRIVATE_IP = "true"
+# metrics
+CSQL_PROXY_PROMETHEUS = "true"
+
+[[files]]
+guest_path = "/run/secrets/google_application_credentials.json"
+secret_name = "GOOGLE_APPLICATION_CREDENTIALS_JSON"
+
+[metrics]
+path = "/metrics"
+port = 9091
+
+[checks.startup]
+type = "http"
+method = "GET"
+path = "/startup"
+port = 9801
+interval = "5s"
+timeout = "2s"
+
+[checks.liveness]
+type = "http"
+method = "GET"
+path = "/startup"
+port = 9801
+interval = "5s"
+timeout = "2s"
+
+[checks.readiness]
+type = "http"
+method = "GET"
+path = "/readiness"
+port = 9801
+grace_period = "1s"
+interval = "5s"
+timeout = "2s"
