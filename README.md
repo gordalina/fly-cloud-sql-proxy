@@ -7,6 +7,10 @@ This repository provisions Cloud SQL Proxy on fly.io as a private service
 Create an app out of this template.
 
 ```sh
+git clone https://github.com/gordalina/fly-cloud-sql-proxy.git fly-cloud-sql-proxy
+cd fly-cloud-sql-proxy
+
+fly config save -a <your-app-name>
 fly launch --no-deploy
 ```
 
@@ -29,8 +33,5 @@ fly ips list
 fly ips release <ip_address>
 ```
 
-And allocate a private IPv6.
-
-```sh
-fly ips allocate-v6 --private
-```
+Now you're ready to connect to it!
+Make sure you are not connecting using SSL.
