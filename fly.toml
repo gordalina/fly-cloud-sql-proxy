@@ -2,7 +2,7 @@ app = 'your-app-name'
 primary_region = 'iad'
 
 [build]
-image = "gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.9-alpine"
+image = "gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.11-alpine"
 
 [deploy]
 strategy = "bluegreen"
